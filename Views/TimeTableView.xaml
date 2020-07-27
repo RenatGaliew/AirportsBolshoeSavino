@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="Airports.Views.TimeTableView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:airports="clr-namespace:Airports"
+             mc:Ignorable="d"
+             Background="Aqua"
+             Height="50"
+             d:DesignHeight="50" d:DesignWidth="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" HorizontalAlignment="Center">
+            <TextBlock.Style>
+                <Style>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Type, Mode=OneWay}" 
+                                     Value="{x:Static airports:TypeAirplane.Arrival}">
+                            <DataTrigger.Setters>
+                                <Setter Property="TextBlock.Text"
+                                        Value="ПРИЛЕТ"></Setter>
+                            </DataTrigger.Setters>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Type, Mode=OneWay}" 
+                                     Value="{x:Static airports:TypeAirplane.Departure}">
+                            <DataTrigger.Setters>
+                                <Setter Property="TextBlock.Text"
+                                        Value="ВЫЛЕТ"/>
+                            </DataTrigger.Setters>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" VerticalAlignment="Center">
+                <TextBlock Text="{Binding From.Name, Mode=OneWay}" HorizontalAlignment="Right" Margin="0 0 10 0"/>
+            </Grid>
+            <Grid Grid.Column="1" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding ArrivalTime, Mode=OneWay, StringFormat=dd.MM.yyyy HH:mm}"/>
+                <StackPanel Grid.Column="1" Orientation="Vertical">
+                    <TextBlock Text="==========>"/>
+                </StackPanel>
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Text="{Binding DepartureTime, Mode=OneWay, StringFormat=dd.MM.yyyy HH:mm}"/>
+            </Grid>
+            <Grid Grid.Column="2" VerticalAlignment="Center">
+                <TextBlock VerticalAlignment="Center" Text="{Binding To.Name, Mode=OneWay}" HorizontalAlignment="Left" Margin="10 0 0 0"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

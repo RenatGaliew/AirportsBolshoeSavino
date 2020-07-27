@@ -1,0 +1,133 @@
+﻿<Window x:Class="Airports.MainWindow"
+        x:Name="ThisWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:Airports.Views"
+        xmlns:System="clr-namespace:System;assembly=System.Runtime"
+        xmlns:StyleAlias="clr-namespace:Airports"
+        xmlns:chart="http://schemas.syncfusion.com/wpf"
+        mc:Ignorable="d"
+        Title="Аэропорт Большое Савино" MinHeight="550" MinWidth="550">
+    <Window.Resources>
+        <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="StyleAlias:ImmitationSpeed"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <views:TimeTableView Grid.Row="0" x:Name="TableViewLast"/>
+        <Grid Grid.Row="1" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Border BorderBrush="Black" BorderThickness="0 2 2 2">
+                    <StackPanel Margin="10 0 0 0">
+                        <TextBlock Text="СТАТИСТИКА (ПРИЛЕТ)" HorizontalAlignment="Center"/>
+                        <views:RaitingView x:Name="RaitingViewLeft" Margin="20 10" HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Border BorderBrush="Black" BorderThickness="0 2">
+                    <StackPanel Margin="10 0 0 0">
+                        <TextBlock Text="СТАТИСТИКА (ВЫЛЕТ)" HorizontalAlignment="Center"/>
+                        <views:RaitingView x:Name="RaitingViewRight" Margin="20 10"  HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="2">
+            <chart:SfChart Header="Статистика прилета и вылета" >
+                <chart:SfChart.Legend>
+                    <chart:ChartLegend HorizontalAlignment="Right" VerticalAlignment="Top">
+                    </chart:ChartLegend>
+                </chart:SfChart.Legend>
+                <chart:SfChart.PrimaryAxis>
+                    <chart:DateTimeAxis LabelFormat="t" 
+                                        LabelRotationAngle="270" 
+                                        Interval="1">
+                    </chart:DateTimeAxis>
+                </chart:SfChart.PrimaryAxis>
+                <chart:SfChart.SecondaryAxis>
+                    <chart:NumericalAxis StartRangeFromZero="True">
+                    </chart:NumericalAxis>
+                </chart:SfChart.SecondaryAxis>
+                <chart:SfChart.Series>
+                    <chart:ColumnSeries ItemsSource="{Binding Path=ViewModel.ArrivalCounts, ElementName=ThisWindow, Mode=OneWay}"
+                                        IsSeriesVisible="True"
+                                        Label="Вылетело"
+                                        Palette="Custom"
+                                        ListenPropertyChange="True"
+                                        XBindingPath="Date" 
+                                        YBindingPath="Count" 
+                                        ShowTooltip="True" >
+                        <chart:ColumnSeries.ColorModel>
+                            <chart:ChartColorModel>
+                                <chart:ChartColorModel.CustomBrushes>
+                                    <SolidColorBrush Color="Red"/>
+                                </chart:ChartColorModel.CustomBrushes>
+                            </chart:ChartColorModel>
+                        </chart:ColumnSeries.ColorModel>
+                        <chart:ColumnSeries.AdornmentsInfo>
+                            <chart:ChartAdornmentInfo ShowLabel="True" LabelPosition="Outer">
+                            </chart:ChartAdornmentInfo>
+                        </chart:ColumnSeries.AdornmentsInfo>
+                    </chart:ColumnSeries>
+                    
+                    <chart:ColumnSeries x:Name="ColumnSeriesDepartment"
+                                        IsSeriesVisible="True"
+                                        Margin="2 0"
+                                        Palette="Custom"
+                                        Label="Прилетело"
+                                        ListenPropertyChange="True"
+                                        ItemsSource="{Binding Path=ViewModel.DepartmentsCounts, ElementName=ThisWindow, Mode=OneWay}"
+                                        XBindingPath="Date" 
+                                        YBindingPath="Count" 
+                                        ShowTooltip="True" >
+                        <chart:ColumnSeries.ColorModel>
+                            <chart:ChartColorModel>
+                                <chart:ChartColorModel.CustomBrushes>
+                                    <SolidColorBrush Color="Green"/>
+                                </chart:ChartColorModel.CustomBrushes>
+                            </chart:ChartColorModel>
+                        </chart:ColumnSeries.ColorModel>
+                        <chart:ColumnSeries.AdornmentsInfo>
+                            <chart:ChartAdornmentInfo ShowLabel="True" LabelPosition="Outer">
+                            </chart:ChartAdornmentInfo>
+                        </chart:ColumnSeries.AdornmentsInfo>
+                    </chart:ColumnSeries>
+                </chart:SfChart.Series>
+<!--Initialize the series for SfChart-->
+            </chart:SfChart>
+        </Grid>
+
+        <Grid Grid.Row="3">
+            <Border BorderThickness="0 2 0 0" BorderBrush="Black">
+                <Grid Margin="8">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Скорость" Margin="0 0 5 1" VerticalAlignment="Center"/>
+                        <ComboBox  Height="24" Width="100" HorizontalAlignment="Left"
+                                   x:Name="SpeedComboBox"
+                                   ItemsSource="{Binding Source={StaticResource dataFromEnum}}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right">
+                        <TextBlock Margin="0 0 5 1" Text="Время:"/>
+                        <TextBlock Margin="0 0 5 1" x:Name="TextBlockTime"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
